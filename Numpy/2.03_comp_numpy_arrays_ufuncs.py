@@ -15,13 +15,13 @@ values = np.random.randint(1, 10, size=5)
 compute_reciprocals(values)
 
 big_array = np.random.randint(1, 100, size=1000000) 
-%timeit compute_reciprocals(big_array) #benchmark
+#%timeit compute_reciprocals(big_array) #benchmark
 
 # Introducing UFUncs
 
 print(compute_reciprocals(values))
 print(1.0 / values)
-%timeit (1.0 / big_array) #vectorized operations via ufuncs
+#%timeit (1.0 / big_array) #vectorized operations via ufuncs
 #scalar and array operation
 
 x = np.arange(9).reshape((3, 3)) 

@@ -1,3 +1,5 @@
+# 07/16/19
+
 import numpy as np
 
 np.random.seed(0) #seed for reproducibility 

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[6]:
-
-
 import numpy as np
 import pandas as pd
 
@@ -22,14 +19,14 @@ plt.hist(inches, 40)
 # What is the average precipitation on those rainy days?
 # How many days were there with more than half an inch of rain?
 
-# Digging into the Data
+'Digging into the Data'
 
 # instead of a loop with a counter variable that we increment 
 # each time we iterate over the data it is much better to use
 # NumPy's ufuncs which are more efficent as NumPy arrays
 # are more effective for storing data
 
-# Compariosn Operators as ufuncs
+'Compariosn Operators as ufuncs'
 
 x = np.array([1,2,3,4,5])
 x < 3 3 # less than
@@ -40,7 +37,7 @@ x != 2 # not equal
 x == 3 # equal 
 (2 * x) == (x ** 2) # element-wise compound expression
 
-# arithmetic operators as ufuncs 
+'arithmetic operators as ufuncs '
 
 '''
 | Operator	    | Equivalent ufunc    || Operator	   | Equivalent ufunc    |
@@ -56,11 +53,11 @@ x
 
 x < 3 # arithmetic operators work on any size array
 
-# Working with Boolean Arrays
+'Working with Boolean Arrays'
 
 print(x)
 
-# Counting entries
+'Counting entries'
 
 # how many values less than 6?
 np.count_nonzero(x < 6)
@@ -90,7 +87,7 @@ np.all(x < 8, axis=1)
 # for multi-dimensional arrays
 # np.sum(), np.any(), and np.all() are the correct aggregations
 
-# Boolean operators
+'Boolean operators'
 
 np.sum((inches > 0.5) & (inches < 1)) 
 # all days with rain less than 1 inche and greater than 0.5 inch
@@ -103,7 +100,7 @@ print("Days with more than 0.5 inches: ", np.sum(inches > 0.5))
 print("Rainy days with < 0.2 inches:   ", np.sum((inches > 0) &
                                                 (inches < 0.2)))
 
-# Boolean Arrays as Masks
+'Boolean Arrays as Masks'
 
 # using Boolean arrays as masks is more powerful
 # as it allows particular subsets of the data themselves
@@ -132,8 +129,7 @@ print("Median precip on non-summer rainy days (inches): ",
       np.median(inches[rainy & ~summer]))
 # combining Boolean operations, masking operations, and aggregates
 
-# Aside: Using the Keywords and/or 
-# Versus the Operators &/|
+'Aside: Using the Keywords and/or Versus the Operators &/|'
 
 # comparing the operators 'and' and 'or' vs '&' and '|'
 # the difference is as such:

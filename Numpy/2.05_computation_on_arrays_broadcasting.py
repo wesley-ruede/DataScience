@@ -1,5 +1,6 @@
 # coding: utf-8
-# Computation on Arrays: Broadcasting 
+'Computation on Arrays: Broadcasting '
+
 # broadcasting allows for bianry operation multi-dimensional 
 # arrays of different sizes
 # Introducing Broadcasting
@@ -17,14 +18,18 @@ print(b)
 a + b
 # a and b are broadcast or stretched over each other to reach
 # a common shape
-# Rules of Broadcasting
+
+'Rules of Broadcasting'
+
 '''strict set of rules tp determine the interaction between arrays
 Rule 1: If the two arrays differ in their number of dimensions, the shape of the one with fewer dimensions is padded with ones
 on its leading (left) side
 Ruel 2: If the shape of the two arrays, does not match in any dimension, the array with shape equal to 1 in that dimension
 is stretched to match the other shape
 Ruel 3: If in any dimension the sizes disagree and neither is equal to 1, an error is raised'''
-# Broadcasting example 1
+
+'Broadcasting example 1'
+
 M = np.ones((2,3))
 a = np.arange(3)
 print(M.shape)
@@ -37,9 +42,10 @@ print(M)
 # so we stretch the dimension to match M.shape -> (2,3)
 # e.g., a.shape -> (2,3)
 M + a
-# Broadcasting example 2
+
+'Broadcasting example 2'
+
 a = np.arange(3).reshape((3,1))
 b = np.arange(3)
 print(a)
 print(b)
-

@@ -7,7 +7,7 @@ big_array = np.random.rand(100000)
 %timeit np.sum(bigarray) # 77.7 µs ± 400 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each
 # np.sum can handle multi-dimensional arrays
 
-# Minumum and Maximum
+'Minumum and Maximum'
 
 min(big_array), max(big_array) 
 np.min(big_array), np.max(big_array) # much quicker than built-in min/max
@@ -19,10 +19,10 @@ M.sum() # adds all values in the array
 M.min(axis=0) #returns lowest value per column 
 M.max(axis=1) #returns highest value per row
 
-# Other Aggregation Functions
+'Other Aggregation Functions'
 # NaN functions can handle missing data
 
-#Examples: What is the average height of US Presidents?
+'Examples: What is the average height of US Presidents?'
 
 !head -4 data/president_heights.csv # 5 is the range that is being iterated over
 

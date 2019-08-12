@@ -1,6 +1,7 @@
-# Computation on NumPy Arrays: Universal Functions
+'Computation on NumPy Arrays: Universal Functions'
 
-# THe slowness of loops
+'The slowness of loops'
+
 import numpy as np
 np.random.seed(0)
 
@@ -17,7 +18,7 @@ compute_reciprocals(values)
 big_array = np.random.randint(1, 100, size=1000000) 
 #%timeit compute_reciprocals(big_array) #benchmark
 
-# Introducing UFUncs
+'Introducing UFUncs'
 
 print(compute_reciprocals(values))
 print(1.0 / values)
@@ -26,12 +27,11 @@ print(1.0 / values)
 
 x = np.arange(9).reshape((3, 3)) 
 2 ** x #multi-dimensional ufunc operation
+# loops should be replaced with vectorized operations 
 
-''' loops should be replaced with vectorized operations '''
+"Exploring NumpPy's UFuncs"
 
-# Exploring NumpPy's UFuncs
-
-# Array arithmetic
+'Array arithmetic'
 
 x = np.arange(4)
 print('x  =', x) 
@@ -45,7 +45,7 @@ print('x ** 2 = ', x ** 2) #exponentation
 print('x % 2 = ', x % 2) #modulus
 print(-(0.5*x + 1) ** 2) # Numpy wrapper that allows all operations to be strug together
 
-# Absolute Value
+'Absolute Value'
 
 x = np.array([-2, -1, 0, 1, 2])
 abs(x) #standard abs works with np arrays
@@ -54,8 +54,7 @@ np.abs(x) #alias of ufunc
 x = np.array([3 - 4j, 4 - 3j, 2 + 0j, 0 + 1j]) #complex data
 np.abs(x)
 
-
-# Trionmetric functions
+'Trionmetric functions'
 
 theta = np.linspace(0, np.pi, 3) #array of angels
 print('theta      = ', theta)
@@ -69,7 +68,7 @@ print('arcsin(x) = ', np.arcsin(x)) #inverse trigonometric
 print('arccos(x) = ', np.arccos(x)) 
 print('arctan(x) = ', np.arctan(x))
 
-# Exponents and logarithms
+'Exponents and logarithms'
 
 x = [1, 2, 3]
 print('x         = ', x)
@@ -86,7 +85,7 @@ print('log10(x)  = ', np.log10(x))
 print('exp(x) - 1 = ', np.expm1(x)) #very precise exp for small numbers
 print('log(1 + x) = ', np.log1p(x)) #very precise log for small numbers
 
-# Specalized ufuncs
+'Specalized ufuncs'
 
 from scipy import special #special ufuncs
 
@@ -103,9 +102,9 @@ print('erf(x)    = ', special.erf(x))
 print('erfc(x)   = ', special.erfc(x))
 print('erfinv(x) = ', special.erfinv(x))
 
-# Advanced Ufunc Features
+'Advanced Ufunc Features'
 
-# Specifying Output
+'Specifying Output'
 
 x = np.arange(5)
 y = np.empty(5) #empty array the same size as original 
@@ -116,7 +115,7 @@ y = np.zeros(10)
 np.power(2, x, out=y[::2]) #every other location in array
 print(y)
 
-# Aggregates
+'Aggregates'
 
 x = np.arange(1,6)
 np.add.reduce(x) #binary ufunc that adds all elements in the array
@@ -124,7 +123,7 @@ np.multiply.reduce(x) # product of all elements in array
 np.add.accumulate(x)  # store intermediate results of addition
 np.multiply.accumulate(x) # store intermediate results of multiplication
 
-# Outer products
+'Outer products'
 
 x = np.arange(1,6)
 np.multiply.outer(x, x) # compute the output of all pairs of two different inputs

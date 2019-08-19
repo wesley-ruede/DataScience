@@ -179,7 +179,7 @@ ind[::2]
 print(ind.size, ind.shape, ind.ndim, ind.dtype)
 
 # trying to alter an Index object is not possible
-ind[1] = 0
+# ind[1] = 0
 # this immutability is a safety net which makes it safer to share
 # indicies between multiple DataFrames and arrays and avoid
 # possible index modifications.

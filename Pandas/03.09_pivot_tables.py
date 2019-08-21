@@ -79,3 +79,50 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 import matplotlib.pyplot as plt
 births.pivot_table('births', index='year', columns='gender', aggfunc='sum').plot()
 plt.ylabel('total births per year')
+
+'further data exploration'
+# it is needed to clean the data and remove outlier or missing values
+
+# cutting outlier via a robust sigma-clipping operation
+quartiles = np.percentile(births['births'], [25,50,75])
+mu = quartiles[1]
+# a robust estimate of the sample mean, where the 0.74 comes from the 
+# interquartile range of a Gaussian distribution 
+sig = 0.74 * (quartiles[2] - quartiles[0])
+
+# using the query() method to filter-out rows with births outside these values
+births = births.query('(births > @mu - 5 * @sig) & (births < @mu + 5 * @sig)')
+
+# setting the day column to integers whereas it was a string
+# due to the columns in the dataset were set to 'null'
+births['day'] = births['day'].astype(int)
+
+# create a datetime index from the year, month, day
+births.index = pd.to_datetime(10000 * births.year +
+                              100 * births.month +
+                              births.day, format='%Y%m%d')
+births['dayofweek'] = births.index.dayofweek
+
+# plotting the births by weekday for several decades
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+births.pivot_table('births', index='dayofweek',
+                   columns='decade', aggfunc='mean').plot()
+plt.gca().set_xticklabels(['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'])
+plt.ylabel('mean births by day');
+
+# grouping the data by month
+births_by_date = births.pivot_table('births',
+                                    [births.index.month, births.index.day])
+births_by_date.head()
+# the result is a multi-index over months and days
+
+# turning months and days into a date by associating them with a dummy year variable
+births_by_date.index = [pd.datetime(2012, month, day)
+                        for (month,day) in births_by_date.index]
+births_by_date.head()
+
+# plotting th results
+fig, ax = plt.subplots(figsize=(12, 4))
+births_by_date.plt(ax=ax);

@@ -52,7 +52,7 @@ print(x[5::-2]) # reversed ever other from index 5
 'Multi-dimensional subarrays'
 
 print(x2)
-print(x2[:3, ::2]) # two rows, three columns
+print(x2[:3, ::2]) # two columns, 3 rows
 print(x2[:3, ::2]) # all rows, every other column
 print(x2[::-1, ::-1]) # subarray dimensions reversed together
 

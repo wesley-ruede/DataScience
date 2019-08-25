@@ -18,8 +18,10 @@ data = ['peter', 'paul', 'steve', 'rossum']
 [s.capitalize() for s in data]
 
 # This will break if any values are missing
+'''
 data = ['peter', 'paul', None, 'steve', 'rossum']
 [s.capitalize() for s in data]
+'''
 
 # creating a Series from the data
 import pandas as pd
@@ -105,3 +107,85 @@ full_monte
 # the get_dummies() routine lets you quickly split-out the
 # indicator variables into a DataFrama
 full_monte['info'].str.get_dummies('|')
+
+'Example: Recipe Database'
+# parsing the recipe data into ingredient lists so as to 
+# find a recipe based on some ingredients on hand
+
+# the database is in JSON form and will use a try block
+# with the pd.read_json to read it
+try:
+    recipes = pd.read_json('data/recipeitems-latest.json')
+except ValueError as e:
+    print('ValueError:', e)
+# each line is valid JSON data, but the entire file is not valid
+
+# checking if the entire files is truly JSON
+with open('data/recipeitems-latest.json') as f:
+    line = f.readline()
+    pd.read_json(line).shape
+
+# constructing a string representation of all the JSON entries 
+# and load the whole file with pd.read_json. 
+# reading the file into a Python array
+with open('data/recipeitems-latest.json', 'r') as f:
+    # Extract each line
+    data = (line.strip() for line in f)
+    # reformat each line as an elemnt of a list
+    data_json = "[{0}]".format(','.join(data))
+# read the result as JSON
+recipes = pd.read_json(data_json)
+
+recipes.shape
+
+# impicit indexing with the iloc attribute of Series and DataFrames
+recipes.iloc[0]
+
+# a closser look at the ingredients
+recipes.ingredients.str.len().describe()
+# perform simple aggfuncs on ingredients is reference to the 
+# string lengths. The average (mean) is 250 characters long
+# with a min() and a max() of almost 10000
+
+# finding which recipes has the longest ingredient list
+# using fancy indexing and pasing len() method with the str attribute
+# of the dataframe index name attribute
+recipes.name[np.argmax(recipes.ingredients.str.len())]
+
+#  performing aggregates to explore how many of the 
+# items are breakfast food
+recipes.description.str.contains('[Bb]reakfast').sum()
+
+# how many of the recipes require an ingredient
+recipes.ingredients.str.contains('[Cc]innamon').sum()
+
+# finding how many entries mispelled 'cinnamon' as 'cinamon'
+recipes.ingredients.str.contains('[Cc]inamon').sum()
+
+'A simple recipe reccomender'
+# to create a recipe reccomender based on the dat is complicated
+# by the herogeneity lof the data. This is no easy operation
+# to extract a clean list of ingredients from each row
+
+# creating list of common ingredients to simply search and 
+# see wheter they are in each recipe's ingredient list.
+spice_list = ['salt', 'pepper', 'oregano', 'sage', 'parsley',
+             'rosemary', 'tarragon', 'thyme', 'paprika', 'cumin']
+
+# building a Boolean DataFrame indicating wheter this ingredient
+# appears in the list
+import re
+spice_df = pd.DataFrame(dict((spice, recipes.ingredients.str.contains(spice, re.IGNORECASE))
+                            for spice in spice_list))
+spice_df.head()
+
+# find the recipes that use parsley, paprika, and tarragon
+# this is where query() method of DataFrame's high-performance comes in
+selection = spice_df.query('parsley & paprika & tarragon')
+len(selection)
+# only 10 recipes have the combination requested
+
+# using the index returned by the selection to discover the 
+# names of the recipes that have this combo
+recipes.name[selection.index]
+# reduced the list by a factor of 20000 to make a more informed choice

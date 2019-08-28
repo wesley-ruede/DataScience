@@ -32,7 +32,7 @@ mask = tmp1 & tmp2
 import numexpr
 mask_numexpr = numexpr.evaluate('(x > 0.5) & (y < 0.5)')
 np.allclose(mask, mask_numexpr)
-# Pandas eval() and query() is conceptually similar and depend on Numexpr
+# Pandas eval() and query() is conceptually similar and depend on Numexpr $
 
 'pandas.eval() for Efficient Operations'
 # the eval() funtion uses string expressions to efficiently compute operation on DataFrames

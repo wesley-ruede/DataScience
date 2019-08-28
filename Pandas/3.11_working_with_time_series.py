@@ -164,3 +164,116 @@ ax[1].legend(['back-fill', 'forward-fill']);
 # the bottom shows different strategies for forward-filling and backward-filling the gap
 
 'Time-shifts'
+# a Series specific operation in Pandas is th shifting of data in time. This can performed with the shift() and tshift() 
+# methods. shift() shifts the data while tshift() shifts the index
+
+fig, ax = plt.subplots(3, sharey=True)
+
+# apply a frequency to the data
+yahoo1 = yahoo.asfreq('D', method='pad')
+
+yahoo1.plot(ax=ax[0])
+yahoo1.shift(900).plot(ax=ax[1])
+yahoo1.tshift(900).plot(ax=ax[2])
+
+# legends and annotations
+local_max = pd.to_datetime('2007-11-05')
+offset = pd.Timedelta(900, 'D')
+
+ax[0].legend(['input'], loc=2)
+ax[0].get_xticklabels()[2].set(weight='heavy', color='red')
+ax[0].axvline(local_max, alpha=0.3, color='red')
+
+ax[1].legend(['shift(900)'], loc=2)
+ax[1].get_xticklabels()[2].set(weight='heavy', color='red')
+ax[1].axvline(local_max + offset, alpha=0.3, color='red')
+
+ax[2].legend(['tshift(900)'], loc=2)
+ax[2].get_xticklabels()[1].set(weight='heavy', color='red')
+ax[2].axvline(local_max + offset, alpha=0.3, color='red');
+
+ROI = 100 * (yahoo1.tshift(-365) / yahoo1 - 1)
+ROI.plot()
+plt.ylabel('% Return on Investment');
+
+'Rolling windows'
+# rolling widow operations can be performed with the rolling() attribute of Series and DataFrames which returns 
+# a view similar to GroupBy and allows for aggregations
+
+# a one-year centered rolling mean and standard deviation
+rolling = yahoo.rolling(365, center=True)
+
+data = pd.DataFrame({'input': yahoo,
+                     'one-year rolling_mean': rolling.mean(),
+                     'one-year rolling_std': rolling.std()},
+                     index=['a', 'b', 'c', 'd', 'e', 'f'])
+# this is not working for me so I'll be back some day
+# ax = data.plot(style=['-', '--', ':'])
+#ax.lines[0].set_alpha(0.3)
+data
+
+'Example: Visulizing Seattle Bicycle Counts'
+
+# read the CSV ouput into a DataFrame and specifiy the Date as an index with dates automaticalled parsed
+data = pd.read_csv('data/FremontBridge.csv', index_col='Date', parse_dates=True)
+data.head()
+
+# processing the data by shortening the column names and adding a 'Total' column
+data.columns = ['West', 'East']
+data['Total'] = data.eval('West + East')
+
+# take a look at the summary statistics for the data
+data.dropna().describe()
+
+'Visulize the data'
+
+# gain insight from a visual representation by potting the raw data
+get_ipython().run_line_magic('matplotlib', 'inline')
+import seaborn; seaborn.set()
+
+data.plot()
+plt.ylabel('Hourly Bicycle Count');
+
+# reampling the data to a coarser grid by week because it is too dense
+weekly = data.resample('W').sum()
+weekly.plot(style=[':', '--', '-'])
+plt.ylabel('Weekly bicycle count');
+
+# utilizing pd.rolling_mean() function we'll do a 30 day rolling mean of the data and center the window
+daily = data.resample('D').sum()
+# a hard cutoff of the window at 30
+daily.rolling(30, center=True).sum().plot(style=[':', '--', '-'])
+plt.ylabel('mean hourly count');
+
+# smoothing the cutoff of the rolling mean using a Gaussian window
+daily.rolling(50, center=True,
+              win_type='gaussian').sum(std=10).plot(style=[':', '--', '-']);
+
+'Digging into the data'
+# while smothed over and a general trend may appear the more interesting structure is hidden
+
+# looking at the average trafic as a function of the time of day using GroupBy
+by_time = data.groupby(data.index.time).mean()
+hourly_ticks = 4 * 60 * 60 * np.arange(6)
+by_time.plot(xticks=hourly_ticks, style=[':', '--', '-']);
+# there is a strong bimodal distribution with peaks at 8 am and 5 pm which most is most likely in relation to commuter trafic
+
+# figuring out how things changed based on the day of the week with groupby
+by_weekday = data.groupby(data.index.dayofweek).mean()
+by_weekday.index = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
+by_weekday.plot(style=[':', '--', '-']);
+
+# doing a compund GroupBy looking at the hourly trend on weekdays versus weekends.
+# grouping by both a flag marking the weekend, and the time of day
+weekend = np.where(data.index.weekday < 5, 'Weekday', 'Weekend')
+by_time = data.groupby([weekend, data.index.time]).mean()
+
+# using MatPlotLib to plot two panels side by side
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(1, 2, figsize=(14,5))
+by_time.loc['Weekday'].plot(ax=ax[0], title='Weekdays',
+                          xticks=hourly_ticks, style=[':', '--', '-'])
+by_time.loc['Weekend'].plot(ax=ax[1], title='Weekend',
+                          xticks=hourly_ticks, style=[':', '--', '-']);
+# there is a bimdal commute pattern during the work week 
+# and a unimodal recreational patten during the weekends
